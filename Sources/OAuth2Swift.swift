@@ -95,7 +95,7 @@ open class OAuth2Swift: OAuthSwift {
     }
 
     @discardableResult
-    open func authorize(withCallbackURL callbackURL: URLConvertible?, scope: String, state: String, parameters: Parameters = [:], headers: OAuthSwift.Headers? = nil, completionHandler completion: @escaping TokenCompletionHandler) -> OAuthSwiftRequestHandle? {
+    open func authorize(withCallbackURL callbackURL: URLConvertible?, scope: String, state: String, landing: String? = nil, parameters: Parameters = [:], headers: OAuthSwift.Headers? = nil, completionHandler completion: @escaping TokenCompletionHandler) -> OAuthSwiftRequestHandle? {
 
         OAuthSwift.log?.trace("Start authorization ...")
         if let url = callbackURL, url.url == nil {
@@ -180,6 +180,9 @@ open class OAuth2Swift: OAuthSwift {
         queryString = queryString?.urlQueryByAppending(parameter: "response_type", value: self.responseType, encodeError)
         queryString = queryString?.urlQueryByAppending(parameter: "scope", value: scope, encodeError)
         queryString = queryString?.urlQueryByAppending(parameter: "state", value: state, encodeError)
+        if let landingParameter = landing {
+          queryString = queryString?.urlQueryByAppending(parameter: "landing", value: landingParameter, encodeError)
+        }
 
         for (name, value) in parameters {
             queryString = queryString?.urlQueryByAppending(parameter: name, value: "\(value)", encodeError)
